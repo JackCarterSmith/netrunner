@@ -10,7 +10,8 @@
 
 (def ^:const base-url "https://raw.githubusercontent.com/NoahTheDuke/netrunner-data/master/edn/raw_data.edn")
 ;; XXX - NRDB has two slashes currently in the card image download url
-(def ^:const nrdb-image-url "https://netrunnerdb.com/card_image//")
+;; Fix card image url based on NRDB API
+(def ^:const nrdb-image-url "https://netrunnerdb.com/card_image/large/")
 
 (defn download-edn-data
   [localpath]
@@ -38,9 +39,9 @@
   (io/file "resources" "public" "img" "cards" (str code ".png")))
 
 (defn- download-card-image
-  "Download a single card image from NRDB"
+  "Download a single card image from NRDB (new format in JPEG)"
   [{:keys [code title]}]
-  (let [url (str nrdb-image-url code ".png")]
+  (let [url (str nrdb-image-url code ".jpg")]
     (println "Downloading: " title "\t\t(" url ")")
     (http/get url {:as :byte-array :timeout 120000}
               (fn [{:keys [status body error]}]
